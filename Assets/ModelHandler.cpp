@@ -23,10 +23,10 @@ void ModelHandler::draw()
     for(int i = 0; i < numTriangles; i++)
     {
 	    glColor3f(t[i].m->specular[0], t[i].m->specular[1], t[i].m->specular[2]);
-    	for(int j = 0; j < 3; j++)
-    	{
-    		glVertex3f(v[t[i].vert[j]].coord[0], v[t[i].vert[j]].coord[1], v[t[i].vert[j]].coord[2]);
-    	}
+
+    	glVertex3f(v[t[i].vert.getX()].coord.getX(), v[t[i].vert.getX()].coord.getY(), v[t[i].vert.getX()].coord.getZ());
+    	glVertex3f(v[t[i].vert.getY()].coord.getX(), v[t[i].vert.getY()].coord.getY(), v[t[i].vert.getY()].coord.getZ());
+    	glVertex3f(v[t[i].vert.getZ()].coord.getX(), v[t[i].vert.getZ()].coord.getY(), v[t[i].vert.getZ()].coord.getZ());
     }
     glEnd();
 }
@@ -73,9 +73,9 @@ void ModelHandler::loadModel(std::string fileName)
 				std::string temp[300];
 				int numElements = removeTags(line, floatRegex, temp);
 				int coordNum = 0;
-				for(int i = 0; i < numElements && !temp[i].empty(); i++)
+				for(int i = 0; i < numElements && !temp[i].empty(); i+=3)
 				{
-					v[numVertices].coord[coordNum++] = std::strtof(temp[i].c_str(), NULL);
+					v[numVertices].coord = Vec3D<GLfloat>(std::strtof(temp[i].c_str(), NULL), std::strtof(temp[i+1].c_str(), NULL), std::strtof(temp[i+2].c_str(), NULL));
 					coordNum%=3;
 					if(coordNum == 0) numVertices++;
 				}
@@ -99,17 +99,12 @@ void ModelHandler::loadModel(std::string fileName)
 			{
 				std::string temp[300];
 				int numElements = removeTags(line, intRegex, temp);
-				int vertNum = 0;
 				//skip every other number
-				for(int i = 0; i < numElements && !temp[i].empty(); i+=2)
+				for(int i = 0; i < numElements && !temp[i].empty(); i+=6)
 				{
-					t[numTriangles].vert[vertNum++] = std::stoi(temp[i].c_str(), NULL);
-					vertNum%=3;
-					if(vertNum == 0)
-					{
-						t[numTriangles].m = tempMat;
-						numTriangles++;
-					}
+					t[numTriangles].vert = Vec3D<int>(std::stoi(temp[i].c_str(), NULL), std::stoi(temp[i+2].c_str(), NULL), std::stoi(temp[i+4].c_str(), NULL));
+					t[numTriangles].m = tempMat;
+					numTriangles++;
 				}
 			}
 			//Check if the line contains materials
@@ -170,26 +165,6 @@ void ModelHandler::loadModel(std::string fileName)
 	else if(file.fail())
 	{
 		std::cout << "Failed to open file: " << fileName << '\n';
-	}
-	for(int i = 0; i < numTriangles; i++)
-	{
-		std::cout << "Triangle " << i << ":\n";
-		for(int j = 0; j < 3; j++)
-		{
-			std::cout << "Side " << j << ": " << t[i].vert[j] << '\n';
-			std::cout << "Coords ";
-			for(int k = 0; k < 3; k++)
-			{
-				std::cout << v[t[i].vert[j]].coord[k] << ", ";
-			}
-			std::cout << "\n\n";
-		}
-		std::cout << "Specular: ";
-		for(int j = 0; j < 4; j++)
-		{
-			std::cout << t[i].m->specular[j] << " ";
-		}
-		std::cout << "\n------------------------------\n";
 	}
 }//end loadModel(std::string) method
 

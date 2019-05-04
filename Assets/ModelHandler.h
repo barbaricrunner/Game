@@ -14,6 +14,8 @@
 #include <fstream>
 #include <regex>
 
+#include "../Math/Vec3D.h"
+
 class ModelHandler {
 
 	struct Material
@@ -24,17 +26,12 @@ class ModelHandler {
 
 	struct Vertices
 	{
-		/**
-		 * 0 = x
-		 * 1 = y
-		 * 2 = z
-		 */
-		float coord[3];
+		Vec3D<GLfloat> coord;
 	};
 
 	struct Triangle
 	{
-		int vert[3];
+		Vec3D<int> vert;
 		Material* m;
 	};
 

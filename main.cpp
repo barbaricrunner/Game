@@ -14,6 +14,7 @@
 
 float worldX, worldY, worldZ;
 float worldXVel, worldYVel, worldZVel;
+float zoomMultiplier = 50.0f;
 
 static void error_callback(int error, const char* description)
 {
@@ -40,6 +41,18 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     else if(key == GLFW_KEY_D && action == GLFW_RELEASE)
     	worldXVel = 0.0f;
 }
+static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	float zoomVelocity = 0.0f;
+
+	if (zoomMultiplier <= 10.0f) zoomVelocity = 0.5f;
+	else zoomVelocity = 1.0f;
+	if(yoffset > 0.0f) zoomMultiplier -= zoomVelocity;
+	else zoomMultiplier += zoomVelocity;
+
+	if(zoomMultiplier > 50.0f) zoomMultiplier = 50.0f;
+	else if (zoomMultiplier < 2.0f) zoomMultiplier = 2.0f;
+}
 
 int main(void)
 {
@@ -60,15 +73,20 @@ int main(void)
     }//end if(!window)
 
     glfwMakeContextCurrent(window);
+
+    //Setup keyboard
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetKeyCallback(window, key_callback);
+
+    //Setup mouse
+    glfwSetScrollCallback(window, scroll_callback);
 
     while (!glfwWindowShouldClose(window))
     {
         float ratio;
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
-        ratio = 50.0f * width / (float) height;
+        ratio = zoomMultiplier * width / (float) height;
         glViewport(0, 0, width, height);
         // Enable depth test
         glEnable(GL_DEPTH_TEST);
@@ -78,7 +96,7 @@ int main(void)
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-ratio, ratio, -50.f, 50.f, 50.f, -50.f);
+        glOrtho(-ratio, ratio, -zoomMultiplier, zoomMultiplier, 20.f, -10.f);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
