@@ -131,7 +131,7 @@ void ModelHandler::loadModel(std::string fileName)
 				int numElements = removeTags(line, floatRegex, temp);
 				for(int i = 0; i < numElements; i++)
 				{
-					m[numMaterials].emission[i] = std::strtof(temp[i].c_str(), NULL);
+					m[numMaterials-1].emission[i] = std::strtof(temp[i].c_str(), NULL);
 				}
 			}
 			//check if the line contains the ambient <color sid="ambient">0 0 0 1</color>
@@ -141,7 +141,7 @@ void ModelHandler::loadModel(std::string fileName)
 				int numElements = removeTags(line, floatRegex, temp);
 				for(int i = 0; i < numElements; i++)
 				{
-					m[numMaterials].ambient[i] = std::strtof(temp[i].c_str(), NULL);
+					m[numMaterials-1].ambient[i] = std::strtof(temp[i].c_str(), NULL);
 				}
 			}
 			//check if the line contains the diffuse <color sid="diffuse">0.01013024 0.007439202 0.64 1</color>
@@ -151,7 +151,7 @@ void ModelHandler::loadModel(std::string fileName)
 				int numElements = removeTags(line, floatRegex, temp);
 				for(int i = 0; i < numElements; i++)
 				{
-					m[numMaterials].diffuse[i] = std::strtof(temp[i].c_str(), NULL);
+					m[numMaterials-1].diffuse[i] = std::strtof(temp[i].c_str(), NULL);
 				}
 			}
 			//check if the line contains the specular <color sid="specular">0.01504615 0.02148593 0.5 1</color>
@@ -161,8 +161,7 @@ void ModelHandler::loadModel(std::string fileName)
 				int numElements = removeTags(line, floatRegex, temp);
 				for(int i = 0; i < numElements; i++)
 				{
-					m[numMaterials].specular[i] = std::strtof(temp[i].c_str(), NULL);
-					std::cout << m[numMaterials].specular[0] << '\n';
+					m[numMaterials-1].specular[i] = std::strtof(temp[i].c_str(), NULL);
 				}
 			}
 		}

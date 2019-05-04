@@ -19,7 +19,7 @@ class ModelHandler {
 	struct Material
 	{
 		std::string matName;
-		float emission[4], ambient[4], diffuse[4], specular[4], shininess;
+		GLfloat emission[4], ambient[4], diffuse[4], specular[4], shininess;
 	};
 
 	struct Vertices

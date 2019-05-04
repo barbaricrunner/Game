@@ -11,7 +11,35 @@
 #include <stdio.h>
 
 #include "Assets/ModelHandler.h"
-#include "IncludeMethods.h"
+
+float worldX, worldY, worldZ;
+float worldXVel, worldYVel, worldZVel;
+
+static void error_callback(int error, const char* description)
+{
+    fputs(description, stderr);
+}
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    else if(key == GLFW_KEY_W && action == GLFW_PRESS)
+    	worldYVel += 0.5f;
+    else if(key == GLFW_KEY_S && action == GLFW_PRESS)
+    	worldYVel -= 0.5f;
+    else if(key == GLFW_KEY_A && action == GLFW_PRESS)
+    	worldXVel -= 0.5f;
+    else if(key == GLFW_KEY_D && action == GLFW_PRESS)
+    	worldXVel = 0.5f;
+    else if(key == GLFW_KEY_W && action == GLFW_RELEASE)
+		worldYVel = 0.0f;
+	else if(key == GLFW_KEY_S && action == GLFW_RELEASE)
+		worldYVel = 0.0f;
+	else if(key == GLFW_KEY_A && action == GLFW_RELEASE)
+		worldXVel = 0.0f;
+    else if(key == GLFW_KEY_D && action == GLFW_RELEASE)
+    	worldXVel = 0.0f;
+}
 
 int main(void)
 {
@@ -32,6 +60,7 @@ int main(void)
     }//end if(!window)
 
     glfwMakeContextCurrent(window);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetKeyCallback(window, key_callback);
 
     while (!glfwWindowShouldClose(window))
@@ -39,7 +68,7 @@ int main(void)
         float ratio;
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
-        ratio = 5.0f * width / (float) height;
+        ratio = 50.0f * width / (float) height;
         glViewport(0, 0, width, height);
         // Enable depth test
         glEnable(GL_DEPTH_TEST);
@@ -49,11 +78,14 @@ int main(void)
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-ratio, ratio, -5.f, 5.f, 5.f, -5.f);
+        glOrtho(-ratio, ratio, -50.f, 50.f, 50.f, -50.f);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        //glRotatef((float) glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-        glRotatef(10.f, 10.f, 10.f, 1.f);
+        glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
+        worldX += worldXVel;
+        worldY += worldYVel;
+        worldZ += worldZVel;
+        glTranslatef(worldX, worldY, worldZ);
         mh.draw();
         glfwSwapBuffers(window);
         glfwPollEvents();
