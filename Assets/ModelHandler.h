@@ -16,12 +16,7 @@
 
 class ModelHandler {
 
-	struct Triangles
-	{
-		int vert[3];
-	};
-
-	struct Materials
+	struct Material
 	{
 		std::string matName;
 		float emission[4], ambient[4], diffuse[4], specular[4], shininess;
@@ -37,16 +32,23 @@ class ModelHandler {
 		float coord[3];
 	};
 
+	struct Triangle
+	{
+		int vert[3];
+		Material* m;
+	};
+
 public:
 	ModelHandler();
 	virtual ~ModelHandler();
 
 	void draw();
 	void loadModel(std::string fileName);
+	void removeTags(std::string &line, std::regex &numRegex, std::string *returnArray);
 
 	Vertices v[100];
-	Triangles t[100];
-	Materials m[10];
+	Triangle t[100];
+	Material m[10];
 	int numVertices;
 	int numTriangles;
 	int numMaterials;
