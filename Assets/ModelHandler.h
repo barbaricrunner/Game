@@ -44,7 +44,7 @@ public:
 
 	void draw();
 	void loadModel(std::string fileName);
-	void removeTags(std::string &line, std::regex &numRegex, std::string *returnArray);
+	int removeTags(std::string &line, std::regex &numRegex, std::string *returnArray);
 
 	Vertices v[100];
 	Triangle t[100];

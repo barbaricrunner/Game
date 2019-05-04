@@ -16,7 +16,7 @@
 int main(void)
 {
 	ModelHandler mh;
-	mh.loadModel("./Models/cube.dae");
+	mh.loadModel("./Models/colorcube.dae");
     GLFWwindow* window;
 
     glfwSetErrorCallback(error_callback);

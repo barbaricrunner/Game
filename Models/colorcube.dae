@@ -142,7 +142,7 @@
         </technique>
       </profile_COMMON>
     </effect>
-    <effect id="Side_6-effect">
+    <effect id="Side6-effect">
       <profile_COMMON>
         <technique sid="common">
           <phong>
@@ -185,8 +185,8 @@
     <material id="Side5-material" name="Side5">
       <instance_effect url="#Side5-effect"/>
     </material>
-    <material id="Side_6-material" name="Side_6">
-      <instance_effect url="#Side_6-effect"/>
+    <material id="Side6-material" name="Side6">
+      <instance_effect url="#Side6-effect"/>
     </material>
   </library_materials>
   <library_geometries>
@@ -240,7 +240,7 @@
           <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
           <p>0 5 7 5 4 5 0 11 3 11 7 11</p>
         </triangles>
-        <triangles material="Side_6-material" count="2">
+        <triangles material="Side6-material" count="2">
           <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
           <p>2 4 7 4 3 4 2 10 6 10 7 10</p>
@@ -261,7 +261,7 @@
               <instance_material symbol="Side3-material" target="#Side3-material"/>
               <instance_material symbol="Side4-material" target="#Side4-material"/>
               <instance_material symbol="Side5-material" target="#Side5-material"/>
-              <instance_material symbol="Side_6-material" target="#Side_6-material"/>
+              <instance_material symbol="Side6-material" target="#Side6-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
