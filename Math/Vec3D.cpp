@@ -2,7 +2,7 @@
  * Vec3D.cpp
  *
  *  Created on: May 4, 2019
- *      Author: user1
+ *      Author: Joseph Haske
  */
 
 #include "Vec3D.h"
