@@ -19,12 +19,13 @@ AssetHandler::~AssetHandler() {
 
 void AssetHandler::loadAssets()
 {
-	mh[0].loadModel("./Models/ground.dae");
-	mh[1].loadModel("./Models/Trees/generic.dae");
+	std::string modelNames[] = {"./Models/ground.dae", "./Models/Trees/generic.dae"};
+	mh[0].loadModels(modelNames);
+	//mh[1].loadModel("./Models/Trees/generic.dae");
 }
 
 void AssetHandler::drawAssets()
 {
 	mh[0].draw();
-	mh[1].draw();
+	//mh[1].draw();
 }
