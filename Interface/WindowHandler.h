@@ -24,19 +24,33 @@ public:
 	void destroyWindow();
 
 private:
-	GLFWwindow* window;
-	float worldX, worldY, worldZ;
-
+	GLFWwindow* window; /**< The GLFW window that is being drawn to. */
+	float worldX; /**< The world X coordinate. */
+	float worldY; /**< The world Y coordinate. */
+	float worldZ; /**< The world Z coordinate. */
+	ModelHandler mh; /**< Placeholder for the AssetHandler until it is developed. */
+	//TODO create an AssetHandler
 };
 
-static float zoomMultiplier = 50.0f;
-static float worldXVel, worldYVel;
+static float zoomMultiplier = 50.0f; /**< Provides zoom multiplier for the mouse wheel. */
+static float worldXVel, worldYVel = 0.0f; /**< Provides velocities for the keyboard inputs. */
 
+/**
+ * Defines what GLFW should do in case of an error.
+ * @param error
+ * @param description
+ */
 static void error_callback(int error, const char* description)
 {
     fputs(description, stderr);
 }
 
+/**
+ * Provides a callback for the scroll wheel on the mouse, allowing for zooming functionality.
+ * @param window
+ * @param xoffset
+ * @param yoffset
+ */
 static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	float zoomVelocity = 0.0f;
@@ -50,6 +64,14 @@ static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	else if (zoomMultiplier < 2.0f) zoomMultiplier = 2.0f;
 }
 
+/**
+ * Provides a callback for the keyboard. Allows for user inputs based on keys.
+ * @param window
+ * @param key
+ * @param scancode
+ * @param action
+ * @param mods
+ */
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)

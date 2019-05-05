@@ -18,17 +18,26 @@
 
 class ModelHandler {
 
+	/**
+	 * This structure stores the data for each material in the model.
+	 */
 	struct Material
 	{
 		std::string matName;
 		GLfloat emission[4], ambient[4], diffuse[4], specular[4], shininess;
 	};
 
+	/**
+	 * This structure stores the data for each vertex in the model.
+	 */
 	struct Vertices
 	{
 		Vec3D<GLfloat> coord;
 	};
 
+	/**
+	 * This structure stores the data for each triangle in the model.
+	 */
 	struct Triangle
 	{
 		Vec3D<int> vert;

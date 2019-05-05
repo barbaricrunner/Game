@@ -7,18 +7,27 @@
 
 #include "WindowHandler.h"
 
+/**
+ * Constructor ensure that the world origin is set to <0,0,0>
+ */
 WindowHandler::WindowHandler() {
-	// TODO Auto-generated constructor stub
-
+	worldX = 0;
+	worldY = 0;
+	worldZ = 0;
 }
 
+/**
+ * The destructor still needs to be developed.
+ */
 WindowHandler::~WindowHandler() {
 	// TODO Auto-generated destructor stub
 }
 
+/**
+ * Creates a GLFWwindow and sets the callbacks for errors, and input peripherals.
+ */
 void WindowHandler::createWindow()
 {
-	ModelHandler mh;
 	mh.loadModel("./Models/colorcube.dae");
 	glfwSetErrorCallback(error_callback);
 
@@ -34,6 +43,7 @@ void WindowHandler::createWindow()
 
 	glfwMakeContextCurrent(window);
 
+	//TODO Setup an InputHandler
 	//Setup keyboard
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
 	glfwSetKeyCallback(window, key_callback);
@@ -41,6 +51,15 @@ void WindowHandler::createWindow()
 	//Setup mouse
 	glfwSetScrollCallback(window, scroll_callback);
 
+	updateWindow();
+	destroyWindow();
+}
+
+/**
+ * Updates the GLFWwindow.
+ */
+void WindowHandler::updateWindow()
+{
 	while (!glfwWindowShouldClose(window))
 	{
 		float ratio;
@@ -67,9 +86,10 @@ void WindowHandler::createWindow()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	destroyWindow();
 }
-
+/**
+ * Destroys the GLFWwindow and terminates GLFW.
+ */
 void WindowHandler::destroyWindow()
 {
     glfwDestroyWindow(window);

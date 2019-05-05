@@ -1,0 +1,8 @@
+digraph "Interface" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  dir_b7263c2df3abed61e1897d5e9e534860 [shape=box, label="Interface", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_b7263c2df3abed61e1897d5e9e534860.html"];
+  dir_84bbf7b3c7f28a5a18725745e1505219 [shape=box label="Assets" URL="dir_84bbf7b3c7f28a5a18725745e1505219.html"];
+  dir_b7263c2df3abed61e1897d5e9e534860->dir_84bbf7b3c7f28a5a18725745e1505219 [headlabel="1", labeldistance=1.5 headhref="dir_000005_000000.html"];
+}

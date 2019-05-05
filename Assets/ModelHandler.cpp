@@ -16,7 +16,9 @@ ModelHandler::~ModelHandler() {
 	// TODO Auto-generated destructor stub
 }
 
-
+/**
+ * Draws the current model.
+ */
 void ModelHandler::draw()
 {
     glBegin(GL_TRIANGLES);
@@ -32,7 +34,9 @@ void ModelHandler::draw()
 }
 
 /**
- * Loads in the model from a collada file
+ * Loads the model in from a Blender output Collada file.
+ *
+ * @param fileName A string representing the file name.
  */
 void ModelHandler::loadModel(std::string fileName)
 {
