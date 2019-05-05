@@ -23,14 +23,14 @@ ModelLoader::~ModelLoader() {
 void ModelLoader::loadModel(std::string &fileName, Model &model)
 {
 	//Opening of block regular expressions
-	std::regex materialBlockStart(".+<library_effects>");
-	std::regex vertexBlockStart(".+<source.+positions.+>");
-	std::regex triangleBlockStart(".+<triangles.+>");
+	std::regex materialBlockStart("^\\s+<library_effects>");
+	std::regex vertexBlockStart("^\\s+<source.+positions.+>");
+	std::regex triangleBlockStart("^\\s+<triangles.+>");
 
 	//Closing of block regular expressions
-	std::regex materialBlockEnd(".+</library_effects>");
-	std::regex vertexBlockEnd(".+</source>");
-	std::regex triangleBlockEnd(".+</triangles>");
+	std::regex materialBlockEnd("^\\s+</library_effects>");
+	std::regex vertexBlockEnd("^\\s+</source>");
+	std::regex triangleBlockEnd("^\\s+</triangles>");
 
 	//Misc regular expressions
 	std::regex scaleRegex(".+<scale.+");
@@ -47,6 +47,7 @@ void ModelLoader::loadModel(std::string &fileName, Model &model)
 		//load each line for processing
 		while(std::getline(file, line))
 		{
+			std::cout << line << '\n';
 			//Determine if line is a material
 			if(std::regex_match(line, materialBlockStart)) state = 1;
 			//Determine if line is a vertex
@@ -76,6 +77,7 @@ void ModelLoader::loadModel(std::string &fileName, Model &model)
 			case 3:// triangle
 				do
 				{
+					std::cout << line << '\n';
 					processTriangle(line, model);
 				}while(std::getline(file, line) && !regex_match(line, triangleBlockEnd));
 				state = 0;
@@ -149,20 +151,26 @@ void ModelLoader::processVertex(std::string &line, Model &model)
 	std::regex floatRegex("[+-]*[0-9]+[.]{0,1}[0-9]*");
 
 	std::string temp[10000];
-	int numElements = removeTags(line, floatRegex, temp);
-	for(int i=0; i<numElements; i+=3)
+	if(regex_match(line, vertexRegex))
 	{
-		model.addVertex(Vec3D<GLfloat>(std::strtof(temp[i].c_str(), NULL), std::strtof(temp[i+1].c_str(), NULL), std::strtof(temp[i+2].c_str(), NULL)));
+		std::cout << "Started vertices.\n";
+		int numElements = removeTags(line, floatRegex, temp);
+		for(int i=0; i<numElements; i+=3)
+		{
+			model.addVertex(Vec3D<GLfloat>(std::strtof(temp[i].c_str(), NULL), std::strtof(temp[i+1].c_str(), NULL), std::strtof(temp[i+2].c_str(), NULL)));
+		}
+		std::cout << "Completed vertices.\n";
 	}
 }
 
 void ModelLoader::processTriangle(std::string &line, Model &model)
 {
-	std::regex triangleMatRegex(".+<triangles.+material.+>");
+	std::regex triangleMatRegex("^\\s+<triangles.+material.+>");
 	std::regex triangleMatNameRegex("[a-zA-Z0-9]+[-]{1}material");
-	std::regex triangleRegex(".+<p>.+");
+	std::regex triangleRegex("^\\s+<p>");
 	std::regex intRegex("[0-9]+");
 
+	std::cout << "Started triangles.\n";
 	//find each triangle material
 	if(std::regex_match(line, triangleMatRegex))
 	{
@@ -171,7 +179,7 @@ void ModelLoader::processTriangle(std::string &line, Model &model)
 		model.setTriangleMaterial(matches[0]);
 	}
 	//Check if the line contains the triangles
-	else if(std::regex_match(line, triangleRegex))
+	else if(std::regex_search(line, triangleRegex, std::regex_constants::match_any))
 	{
 		std::string temp[10000];
 		int numElements = removeTags(line, intRegex, temp);
@@ -181,6 +189,7 @@ void ModelLoader::processTriangle(std::string &line, Model &model)
 			model.addTriangle(Vec3D<int>(std::stoi(temp[i].c_str(), NULL), std::stoi(temp[i+2].c_str(), NULL), std::stoi(temp[i+4].c_str(), NULL)));
 		}
 	}
+	std::cout << "Completed triangles.\n";
 }
 
 void ModelLoader::getFloat4D(std::string &line, Vec4D<GLfloat> &v)
@@ -197,13 +206,14 @@ void ModelLoader::getFloat4D(std::string &line, Vec4D<GLfloat> &v)
  */
 int ModelLoader::removeTags(std::string &line, std::regex &numRegex, std::string *returnArray)
 {
-	std::regex stripRegex(".+<.+>");
+	std::regex stripRegex("^\\s+<(p|float_array.+\")>");
 	std::regex stripRegex1("</.+>");
 
 	//strip the end </...> first to allow for searching for <...>
 	//Leaves only the numbers, space delimited
-	line = std::regex_replace(std::regex_replace(line, stripRegex1, ""), stripRegex, "");
+	line = std::regex_replace(line, stripRegex, "", std::regex_constants::format_first_only);
 
+	std::cout << line << '\n';
 	std::smatch matches;
 	int i = 0;
 	while(regex_search(line, matches, numRegex))

@@ -17,7 +17,7 @@
 class Model {
 
 	const static int MAX_VERTICES = 2000; /**< The maximum number of vertices supported. */
-	const static int MAX_TRIANGLES = 1500; /**< The maximum number of triangles supported. */
+	const static int MAX_TRIANGLES = 2000; /**< The maximum number of triangles supported. */
 	const static int MAX_MATERIALS = 10; /**< The maximum number of materials supported. */
 
 	/**

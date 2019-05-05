@@ -73,7 +73,6 @@ void Model::getMaterial(std::string name, Material *&mat)
  */
 void Model::drawModel()
 {
-
     glBegin(GL_TRIANGLES);
     for(int i = 0; i < numTriangles; i++)
     {
