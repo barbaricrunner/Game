@@ -19,7 +19,7 @@ public:
 	void drawAssets();
 
 private:
-	ModelHandler mh[100]; /**< Loads up to 100 models. */
+	ModelHandler mh;
 };
 
 #endif /* ASSETHANDLER_H_ */

@@ -26,7 +26,7 @@ class ModelHandler {
 	void loadModels(std::string fileName[1]);
 
 private:
-	Model models[1];
+	Model models[2];
 	Vec3D<GLfloat> scale; /**< A scaling vector */
 
 	int removeTags(std::string &line, std::regex &numRegex, std::string *returnArray);
