@@ -22,19 +22,17 @@
 class ModelLoader {
 
 public:
-	ModelLoader(std::string &fileN, Model &m);
+	ModelLoader();
 	virtual ~ModelLoader();
 
-	void loadModel();
+	void loadModel(std::string &fileN, Model &model);
 private:
-	Model model;
-	std::string fileName;
 	Vec3D<GLfloat> scale; /**< A scaling vector */
 
 	int removeTags(std::string &line, std::regex &numRegex, std::string *returnArray);
-	void processMaterial(std::string &line);
-	void processVertex(std::string &line);
-	void processTriangle(std::string &line);
+	void processMaterial(std::string &line, Model &model);
+	void processVertex(std::string &line, Model &model);
+	void processTriangle(std::string &line, Model &model);
 	void scaleModel();
 	void removeExponents(std::string &line);
 	void getFloat4D(std::string &line, Vec4D<GLfloat> &v);

@@ -7,10 +7,8 @@
 
 #include "ModelLoader.h"
 
-ModelLoader::ModelLoader(std::string &fileN, Model &m) {
-	fileName = fileN;
-	model = m;
-	loadModel();
+ModelLoader::ModelLoader() {
+
 }
 
 ModelLoader::~ModelLoader() {
@@ -22,7 +20,7 @@ ModelLoader::~ModelLoader() {
  *
  * @param fileName A string representing the file name.
  */
-void ModelLoader::loadModel()
+void ModelLoader::loadModel(std::string &fileName, Model &model)
 {
 	//Opening of block regular expressions
 	std::regex materialBlockStart(".+<library_effects>");
@@ -30,7 +28,9 @@ void ModelLoader::loadModel()
 	std::regex triangleBlockStart(".+<triangles.+>");
 
 	//Closing of block regular expressions
-	std::regex blockEnd(".+<[.]/(libarary_effects)|(source)|(triangles)>");
+	std::regex materialBlockEnd(".+</library_effects>");
+	std::regex vertexBlockEnd(".+</source>");
+	std::regex triangleBlockEnd(".+</triangles>");
 
 	//Misc regular expressions
 	std::regex scaleRegex(".+<scale.+");
@@ -47,31 +47,40 @@ void ModelLoader::loadModel()
 		//load each line for processing
 		while(std::getline(file, line))
 		{
+			//Determine if line is a material
+			if(std::regex_match(line, materialBlockStart)) state = 1;
+			//Determine if line is a vertex
+			else if(std::regex_match(line, vertexBlockStart)) state = 2;
+			//Determine if line is a triangle
+			else if(std::regex_match(line, triangleBlockStart)) state = 3;
+
 			//Process chunk of lines
 			switch(state)
 			{
 			case 1: //material
-				removeExponents(line);
-				processMaterial(line);
-				if(std::regex_match(line, blockEnd)) state = 0;
+				do
+				{
+					removeExponents(line);
+					processMaterial(line, model);
+				}while(std::getline(file, line) && !regex_match(line, materialBlockEnd));
+				state = 0;
 				break;
 			case 2: //vertex
-				removeExponents(line);
-				processVertex(line);
-				if(std::regex_match(line, blockEnd)) state = 0;
+				do
+				{
+					removeExponents(line);
+					processVertex(line, model);
+				}while(std::getline(file, line) && !regex_match(line, vertexBlockEnd));
+				state = 0;
 				break;
 			case 3:// triangle
-				processTriangle(line);
-				if(std::regex_match(line, blockEnd)) state = 0;
+				do
+				{
+					processTriangle(line, model);
+				}while(std::getline(file, line) && !regex_match(line, triangleBlockEnd));
+				state = 0;
 				break;
 			default:
-				//Determine if line is a material
-				if(std::regex_match(line, materialBlockStart)) state = 1;
-				//Determine if line is a vertex
-				else if(std::regex_match(line, vertexBlockStart)) state = 2;
-				//Determine if line is a triangle
-				else if(std::regex_match(line, triangleBlockStart)) state = 3;
-				//Determine if current block is an end and reset state to 0
 				break;
 			}
 		}
@@ -81,7 +90,7 @@ void ModelLoader::loadModel()
 	{
 		std::cout << "Failed to open file: " << fileName << '\n';
 	}
-	scaleModel();
+	model.printModel();
 }//end loadModel(std::string) method
 
 /**
@@ -89,7 +98,7 @@ void ModelLoader::loadModel()
  *
  * @param line
  */
-void ModelLoader::processMaterial(std::string &line)
+void ModelLoader::processMaterial(std::string &line, Model &model)
 {
 	std::regex materialRegex(".+<effect.+>");
 	std::regex matNameRegex("[a-zA-Z0-9]+[-]{1}effect");
@@ -103,7 +112,7 @@ void ModelLoader::processMaterial(std::string &line)
 		std::smatch matches;
 		std::regex_search(line, matches, matNameRegex);
 		std::string str = matches[0];
-		std::regex_replace(str, std::regex("effect"), "material");
+		str = std::regex_replace(str, std::regex("effect"), "material");
 		model.addMaterial(str);
 
 		//rename to material instead of effect
@@ -134,12 +143,12 @@ void ModelLoader::processMaterial(std::string &line)
 	}
 }
 
-void ModelLoader::processVertex(std::string &line)
+void ModelLoader::processVertex(std::string &line, Model &model)
 {
 	std::regex vertexRegex(".+<float_array.+mesh-positions-array.+>.+<.+>");
 	std::regex floatRegex("[+-]*[0-9]+[.]{0,1}[0-9]*");
 
-	std::string temp[1000];
+	std::string temp[10000];
 	int numElements = removeTags(line, floatRegex, temp);
 	for(int i=0; i<numElements; i+=3)
 	{
@@ -147,7 +156,7 @@ void ModelLoader::processVertex(std::string &line)
 	}
 }
 
-void ModelLoader::processTriangle(std::string &line)
+void ModelLoader::processTriangle(std::string &line, Model &model)
 {
 	std::regex triangleMatRegex(".+<triangles.+material.+>");
 	std::regex triangleMatNameRegex("[a-zA-Z0-9]+[-]{1}material");

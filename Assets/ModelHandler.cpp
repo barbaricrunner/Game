@@ -21,7 +21,7 @@ ModelHandler::~ModelHandler() {
 void ModelHandler::draw()
 {
 	//TODO: Draw each model.
-	for(int i=0; i<2; i++)
+	for(int i=0; i<1; i++)
 		models[i].drawModel();
 }
 
@@ -32,12 +32,11 @@ void ModelHandler::draw()
  */
 void ModelHandler::loadModels(std::string *fileName)
 {
-	for(int i=0; i<2; i++)
+	for(int i=0; i<1; i++)
 	{
-		ModelLoader ml(fileName[i], models[i]);
+		ModelLoader ml;
+		ml.loadModel(fileName[i], models[i]);
 	}
-
-
 }//end loadModel(std::string) method
 
 

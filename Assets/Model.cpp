@@ -57,7 +57,7 @@ void Model::setTriangleMaterial(std::string name)
 	getMaterial(name, t[numTriangles].m);
 }
 
-void Model::getMaterial(std::string name, Material *mat)
+void Model::getMaterial(std::string name, Material *&mat)
 {
 	for(int i=0; i<numMaterials; i++)
 	{
@@ -73,6 +73,7 @@ void Model::getMaterial(std::string name, Material *mat)
  */
 void Model::drawModel()
 {
+
     glBegin(GL_TRIANGLES);
     for(int i = 0; i < numTriangles; i++)
     {
@@ -83,7 +84,7 @@ void Model::drawModel()
     	glVertex3f(v[t[i].vert.getZ()].coord.getX(), v[t[i].vert.getZ()].coord.getY(), v[t[i].vert.getZ()].coord.getZ());
     }
     glEnd();
-    printModel();
+	//std::cout << "GOT HERE\n";
 }
 
 /**

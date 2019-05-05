@@ -63,7 +63,7 @@ public:
 	void matSetSpecular(Vec4D<GLfloat> s);
 	void setTriangleMaterial(std::string name);
 
-	void getMaterial(std::string name, Material *mat);
+	void getMaterial(std::string name, Material *&mat);
 
 	void printModel();
 	void drawModel();

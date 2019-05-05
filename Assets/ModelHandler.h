@@ -23,10 +23,10 @@ class ModelHandler {
 	virtual ~ModelHandler();
 
 	void draw();
-	void loadModels(std::string fileName[2]);
+	void loadModels(std::string fileName[1]);
 
 private:
-	Model models[2];
+	Model models[1];
 	Vec3D<GLfloat> scale; /**< A scaling vector */
 
 	int removeTags(std::string &line, std::regex &numRegex, std::string *returnArray);
