@@ -1,8 +1,0 @@
-digraph "Assets" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_84bbf7b3c7f28a5a18725745e1505219 [shape=box, label="Assets", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_84bbf7b3c7f28a5a18725745e1505219.html"];
-  dir_5bce4665f02041fc00c7e7e07b63c945 [shape=box label="Math" URL="dir_5bce4665f02041fc00c7e7e07b63c945.html"];
-  dir_84bbf7b3c7f28a5a18725745e1505219->dir_5bce4665f02041fc00c7e7e07b63c945 [headlabel="1", labeldistance=1.5 headhref="dir_000000_000006.html"];
-}
