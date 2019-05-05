@@ -28,7 +28,7 @@ WindowHandler::~WindowHandler() {
  */
 void WindowHandler::createWindow()
 {
-	mh.loadModel("./Models/colorcube.dae");
+	ah.loadAssets();
 	glfwSetErrorCallback(error_callback);
 
 	if (!glfwInit()) exit(EXIT_FAILURE);
@@ -82,7 +82,7 @@ void WindowHandler::updateWindow()
 		worldX += worldXVel;
 		worldY += worldYVel;
 		glTranslatef(worldX, worldY, worldZ);
-		mh.draw();
+		ah.drawAssets();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

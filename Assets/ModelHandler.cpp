@@ -8,8 +8,11 @@
 #include "ModelHandler.h"
 
 ModelHandler::ModelHandler() {
-	// TODO Auto-generated constructor stub
+	numTriangles = 0;
+	numVertices = 0;
+	numMaterials = 0;
 
+	scale = Vec3D<GLfloat>(1.0f, 1.0f, 1.0f);
 }
 
 ModelHandler::~ModelHandler() {
@@ -52,6 +55,7 @@ void ModelHandler::loadModel(std::string fileName)
 	std::regex ambientRegex(".+<color.+ambient.+>.+<.+>");
 	std::regex diffuseRegex(".+<color.+diffuse.+>.+<.+>");
 	std::regex specularRegex(".+<color.+specular.+>.+<.+>");
+	std::regex scaleRegex(".+<scale.+");
 
 	std::regex floatRegex("[+-]*[0-9]+[.]{0,1}[0-9]*");
 	std::regex intRegex("[0-9]+");
@@ -74,11 +78,12 @@ void ModelHandler::loadModel(std::string fileName)
 			//Check if the line contains the vertex positions
 			if(std::regex_match(line, positionRegex))
 			{
-				std::string temp[300];
+				std::string temp[900];
 				int numElements = removeTags(line, floatRegex, temp);
 				int coordNum = 0;
 				for(int i = 0; i < numElements && !temp[i].empty(); i+=3)
 				{
+					//TODO: Add ability to strip out #.###e-##
 					v[numVertices].coord = Vec3D<GLfloat>(std::strtof(temp[i].c_str(), NULL), std::strtof(temp[i+1].c_str(), NULL), std::strtof(temp[i+2].c_str(), NULL));
 					coordNum%=3;
 					if(coordNum == 0) numVertices++;
@@ -101,7 +106,7 @@ void ModelHandler::loadModel(std::string fileName)
 			//Check if the line contains the triangles
 			else if(std::regex_match(line, triangleRegex))
 			{
-				std::string temp[300];
+				std::string temp[100];
 				int numElements = removeTags(line, intRegex, temp);
 				//skip every other number
 				for(int i = 0; i < numElements && !temp[i].empty(); i+=6)
@@ -163,6 +168,13 @@ void ModelHandler::loadModel(std::string fileName)
 					m[numMaterials-1].specular[i] = std::strtof(temp[i].c_str(), NULL);
 				}
 			}
+			//check if the line contains the scale matrix <scale sid="scale">10 10 1</scale>
+			else if(std::regex_match(line, scaleRegex))
+			{
+				std::string temp[3];
+				removeTags(line, floatRegex, temp);
+				scale = Vec3D<GLfloat>(std::strtof(temp[0].c_str(), NULL), std::strtof(temp[1].c_str(), NULL), std::strtof(temp[2].c_str(), NULL));
+			}
 		}
 		file.close();
 	}
@@ -170,6 +182,8 @@ void ModelHandler::loadModel(std::string fileName)
 	{
 		std::cout << "Failed to open file: " << fileName << '\n';
 	}
+	scaleModel();
+	printModel();
 }//end loadModel(std::string) method
 
 /**
@@ -193,3 +207,30 @@ int ModelHandler::removeTags(std::string &line, std::regex &numRegex, std::strin
 	}
 	return i;
 }//end removeTags(std::string line, std::regex, std::regex)
+
+/**
+ * Scales the model from the blender input matrix.
+ */
+void ModelHandler::scaleModel()
+{
+	for(int i = 0; i < numVertices; i++)
+	{
+		v[i].coord.scale(scale);
+	}
+}
+
+/**
+ * Prints the model data for debugging.
+ */
+void ModelHandler::printModel()
+{
+	std::cout << "Number of Vertices: " << numVertices << '\n';
+	std::cout << "Number of Triangles: " << numTriangles << '\n';
+	std::cout << "Number of Materials: " << numMaterials << '\n';
+	//Vertices v[300]; /**< Loads up to 300 vertices. */
+	//	Triangle t[100]; /**< Supports models with up to 100 triangles. */
+	//	Material m[10]; /**< Supports models with up to 10 materials. */
+	//	Vec3D<GLfloat> scale; /**< A scaling vector */
+	//	int numTriangles; /**< Stores the number of triangles in this model. */
+	//	int numMaterials; /**< Stores the number of materials in this model. */
+}

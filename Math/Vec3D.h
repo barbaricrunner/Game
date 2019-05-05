@@ -25,6 +25,7 @@ public:
 
 	void add(Vec3D v);
 	void sub(Vec3D v);
+	void scale(Vec3D v);
 	Vec3D<num> projOnto(Vec3D v);
 
 	/**

@@ -65,6 +65,19 @@ void Vec3D<num>::sub(Vec3D v)
 }
 
 /**
+ * Takes an input Vec3D and scales the current one in each direction, storing the result in place of this vector.
+ *
+ * @param v The vector to be multiplied by.
+ */
+template <class num>
+void Vec3D<num>::scale(Vec3D v)
+{
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+}
+
+/**
  * Projects this vector onto the input Vec3D.
  *
  * @param v The vector to be projected on.

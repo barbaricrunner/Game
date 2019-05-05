@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../Assets/ModelHandler.h"
+#include "../Assets/AssetHandler.h"
 
 class WindowHandler{
 public:
@@ -28,7 +28,7 @@ private:
 	float worldX; /**< The world X coordinate. */
 	float worldY; /**< The world Y coordinate. */
 	float worldZ; /**< The world Z coordinate. */
-	ModelHandler mh; /**< Placeholder for the AssetHandler until it is developed. */
+	AssetHandler ah; /**< Allows assets to be loaded into the window */
 	//TODO create an AssetHandler
 };
 
